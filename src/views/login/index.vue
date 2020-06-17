@@ -3,18 +3,43 @@
     <!-- 导航栏 -->
     <van-nav-bar class="page-nav-bar" title="登录" />
 
-    <van-form @submit="onSubmit()">
-      <van-field v-model="user.mobile" placeholder="请输入手机号">
+    <van-form ref="loginForm" @submit="onSubmit()">
+      <van-field
+        v-model="user.mobile"
+        placeholder="请输入手机号"
+        :rules="formRules.mobile"
+        type="number"
+        maxlength="11"
+      >
         <template #left-icon>
           <i class="toutiao toutiao-shouji"></i>
         </template>
       </van-field>
-      <van-field v-model="user.code" placeholder="请输入验证码">
+      <van-field
+        v-model="user.code"
+        placeholder="请输入验证码"
+        :rules="formRules.code"
+        type="number"
+        maxlength="6"
+      >
         <template #left-icon>
           <i class="toutiao toutiao-yanzhengma"></i>
         </template>
         <template #button>
-          <van-button round class="send-sms-byn" size="small" type="primary"
+          <van-count-down
+            v-if="isCountDownShow"
+            :time="1000 * 60"
+            format="还剩 ss s"
+            @finish="isCountDownShow = false"
+          />
+          <van-button
+            v-else
+            round
+            class="send-sms-byn"
+            size="small"
+            type="primary"
+            native-type="button"
+            @click="sendSms"
             >获取验证码</van-button
           >
         </template>
@@ -29,29 +54,59 @@
 </template>
 
 <script>
-import { Login } from '@/api/user'
+import { Login, sendSms } from '@/api/user'
 
 export default {
   name: 'Login',
   data() {
     return {
       user: {
-        mobile: '',
-        code: ''
-      }
+        mobile: '13911111111',
+        code: '246810'
+      },
+      formRules: {
+        mobile: [
+          { required: true, message: '请填写手机号' },
+          { pattern: /^1[3|5|7|8]\d{9}$/, message: '手机号码格式不正确' }
+        ],
+        code: [
+          { required: true, message: '请填写验证码' },
+          { pattern: /^\d{6}$/, message: '验证码格式不正确' }
+        ]
+      },
+      isCountDownShow: false
     }
   },
   created() {},
   methods: {
     async onSubmit() {
+      this.$toast.loading({
+        message: '登录中...',
+        // 禁用背景点击
+        forbidClick: true
+      })
       try {
-        const res = await Login(this.user)
-        console.log(res, '登录成功')
+        const { data } = await Login(this.user)
+        this.$store.commit('setUser', data.data)
+        this.$toast.success('登录成功')
       } catch (err) {
         if (err.response.status === 400) {
-          console.log('手机号码不正确或验证码错误')
+          this.$toast.fail('手机号码不正确或验证码错误')
         } else {
-          console.log('登录失败，请稍后再试')
+          this.$toast.fail('登录失败，请稍后再试')
+        }
+      }
+    },
+    async sendSms() {
+      this.isCountDownShow = true
+      try {
+        await sendSms(this.user.mobile)
+        this.$toast.success('发送成功')
+      } catch (err) {
+        if (err.response.status === 429) {
+          this.$toast.fail('发送过于频繁，请稍后再试')
+        } else {
+          this.$toast.fail('发送失败，请稍后再试')
         }
       }
     }
