@@ -1,7 +1,11 @@
 <template>
   <div class="login-container">
     <!-- 导航栏 -->
-    <van-nav-bar class="page-nav-bar" title="登录" />
+    <van-nav-bar class="page-nav-bar" title="登录">
+      <template #left>
+        <van-icon name="cross" color="#fff" @click="$router.go(-1)" />
+      </template>
+    </van-nav-bar>
 
     <van-form ref="loginForm" @submit="onSubmit()">
       <van-field
