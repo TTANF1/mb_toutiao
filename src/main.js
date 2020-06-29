@@ -13,6 +13,8 @@ import 'vant/lib/index.css'
 // 适配设置rem基准值插件
 import 'amfe-flexible'
 
+import './utils/dayjs'
+
 Vue.use(Vant)
 
 Vue.config.productionTip = false

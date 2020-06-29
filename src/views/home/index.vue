@@ -23,10 +23,19 @@
         <article-list :channel="channel" />
       </van-tab>
       <div class="placeholder" slot="nav-right"></div>
-      <div class="burger-btn" slot="nav-right">
+      <div class="burger-btn" slot="nav-right" @click="onBurgerBtn">
         <i class="toutiao toutiao-gengduo"></i>
       </div>
     </van-tabs>
+
+    <!-- 编辑频道弹层 -->
+    <van-popup
+      v-model="showEditChannel"
+      closeable
+      close-icon-position="top-left"
+      position="bottom"
+      :style="{ height: '100%' }"
+    />
   </div>
 </template>
 
@@ -39,7 +48,8 @@ export default {
   data() {
     return {
       active: 0,
-      channelsList: []
+      channelsList: [],
+      showEditChannel: false
     }
   },
   components: {
@@ -49,6 +59,9 @@ export default {
     this.loadChannelsList()
   },
   methods: {
+    onBurgerBtn() {
+      this.showEditChannel = true
+    },
     async loadChannelsList() {
       try {
         const { data: res } = await getUserChannels()
