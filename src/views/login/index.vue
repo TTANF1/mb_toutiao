@@ -43,7 +43,7 @@
             size="small"
             type="primary"
             native-type="button"
-            @click="sendSms"
+            @click="onSendSmsBtn"
             >获取验证码</van-button
           >
         </template>
@@ -103,7 +103,7 @@ export default {
         }
       }
     },
-    async sendSms() {
+    async onSendSmsBtn() {
       this.isCountDownShow = true
       try {
         await sendSms(this.user.mobile)

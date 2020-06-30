@@ -35,13 +35,20 @@
       close-icon-position="top-left"
       position="bottom"
       :style="{ height: '100%' }"
-    />
+    >
+      <channel-edit
+        :my-channels="channelsList"
+        :active="active"
+        @update-active="onUpdateActive"
+      />
+    </van-popup>
   </div>
 </template>
 
 <script>
 import { getUserChannels } from '@/api/user'
 import ArticleList from './components/article-list.vue'
+import ChannelEdit from './components/channel-edit.vue'
 
 export default {
   name: 'HomeIndex',
@@ -53,7 +60,8 @@ export default {
     }
   },
   components: {
-    ArticleList
+    ArticleList,
+    ChannelEdit
   },
   created() {
     this.loadChannelsList()
@@ -69,6 +77,11 @@ export default {
       } catch (err) {
         this.$toast('获取用户频道列表失败，请稍后再试')
       }
+    },
+    onUpdateActive(index, isShowEditChannel) {
+      this.active = index
+      console.log(isShowEditChannel)
+      this.showEditChannel = isShowEditChannel
     }
   }
 }

@@ -77,14 +77,11 @@ export default {
   computed: {
     ...mapState(['user'])
   },
-  async created() {
-    // const { data: res } = await getUserInfo().catch(err => err)
-    // this.userInfo = res.data
-    try {
-      const { data } = await getUserInfo()
-      this.userInfo = data.data
-    } catch (err) {
-      this.$toast('获取用户信息失败，请稍后再试')
+  created() {
+    if (this.user) {
+      // 待优化 1
+      // 如果不想每次进来都重新请求一遍，参考vue官方文档 keep-alive
+      this.loadUserInfo()
     }
   },
   methods: {
@@ -101,6 +98,16 @@ export default {
           // on cancel
           console.log('no')
         })
+    },
+    async loadUserInfo() {
+      // const { data: res } = await getUserInfo().catch(err => err)
+      // this.userInfo = res.data
+      try {
+        const { data } = await getUserInfo()
+        this.userInfo = data.data
+      } catch (err) {
+        this.$toast('获取用户信息失败，请稍后再试')
+      }
     }
   }
 }
