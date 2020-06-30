@@ -47,6 +47,8 @@
 
 <script>
 import { getUserChannels } from '@/api/user'
+import { mapState } from 'vuex'
+import { getItem } from '@/utils/storage'
 import ArticleList from './components/article-list.vue'
 import ChannelEdit from './components/channel-edit.vue'
 
@@ -58,6 +60,9 @@ export default {
       channelsList: [],
       showEditChannel: false
     }
+  },
+  computed: {
+    ...mapState(['user'])
   },
   components: {
     ArticleList,
@@ -71,11 +76,23 @@ export default {
       this.showEditChannel = true
     },
     async loadChannelsList() {
-      try {
+      // try {
+      //   const { data: res } = await getUserChannels()
+      //   this.channelsList = res.data.channels
+      // } catch (err) {
+      //   this.$toast('获取用户频道列表失败，请稍后再试')
+      // }
+      if (this.user) {
         const { data: res } = await getUserChannels()
         this.channelsList = res.data.channels
-      } catch (err) {
-        this.$toast('获取用户频道列表失败，请稍后再试')
+      } else {
+        const localChannels = getItem('TOUTIAO_CHANNELS')
+        if (localChannels) {
+          this.channelsList = localChannels
+        } else {
+          const { data: res } = await getUserChannels()
+          this.channelsList = res.data.channels
+        }
       }
     },
     onUpdateActive(index, isShowEditChannel) {

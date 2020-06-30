@@ -48,7 +48,11 @@
 </template>
 
 <script>
-import { getAllChannels, addUserChannels } from '@/api/channel'
+import {
+  getAllChannels,
+  addUserChannels,
+  removeUserChannelsById
+} from '@/api/channel'
 import { mapState } from 'vuex'
 import { setItem } from '@/utils/storage'
 
@@ -109,13 +113,26 @@ export default {
       if (this.isEdit) {
         // 编辑状态
         if (this.fiexdChannels.includes(channel.id)) return
+        // 删除频道
+        this.myChannels.splice(index, 1)
+        this.onDelChannel(channel)
         if (index <= this.active) {
           this.$emit('update-active', this.active - 1, true)
         }
-        this.myChannels.splice(index, 1)
       } else {
         // 非编辑状态
         this.$emit('update-active', index, false)
+      }
+    },
+    async onDelChannel(channel) {
+      try {
+        if (this.user) {
+          await removeUserChannelsById(channel.id)
+        } else {
+          setItem('TOUTIAO_CHANNELS', this.myChannels)
+        }
+      } catch (err) {
+        this.$toast('删除频道失败')
       }
     }
   },
