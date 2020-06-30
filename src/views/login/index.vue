@@ -32,10 +32,14 @@
         <template #button>
           <van-count-down
             v-if="isCountDownShow"
-            :time="1000 * 60"
+            :time="1000 * 10"
             format="还剩 ss s"
             @finish="isCountDownShow = false"
-          />
+          >
+            <template #default="{ seconds }">
+              {{ (seconds + 1 + '').padStart(2, '0') }} s
+            </template>
+          </van-count-down>
           <van-button
             v-else
             round
@@ -58,7 +62,7 @@
 </template>
 
 <script>
-import { Login, sendSms } from '@/api/user'
+import { Login } from '@/api/user'
 
 export default {
   name: 'Login',
@@ -105,16 +109,16 @@ export default {
     },
     async onSendSmsBtn() {
       this.isCountDownShow = true
-      try {
-        await sendSms(this.user.mobile)
-        this.$toast.success('发送成功')
-      } catch (err) {
-        if (err.response.status === 429) {
-          this.$toast.fail('发送过于频繁，请稍后再试')
-        } else {
-          this.$toast.fail('发送失败，请稍后再试')
-        }
-      }
+      // try {
+      //   await sendSms(this.user.mobile)
+      //   this.$toast.success('发送成功')
+      // } catch (err) {
+      //   if (err.response.status === 429) {
+      //     this.$toast.fail('发送过于频繁，请稍后再试')
+      //   } else {
+      //     this.$toast.fail('发送失败，请稍后再试')
+      //   }
+      // }
     }
   }
 }
