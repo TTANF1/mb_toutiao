@@ -16,7 +16,12 @@ const routes = [
       { path: '/my', component: () => import('@/views/my') }
     ]
   },
-  { path: '/search', component: () => import('@/views/search') }
+  { path: '/search', component: () => import('@/views/search') },
+  {
+    path: '/article/:articleId',
+    component: () => import('@/views/article'),
+    props: true
+  }
 ]
 
 const router = new VueRouter({
