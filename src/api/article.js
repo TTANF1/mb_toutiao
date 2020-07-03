@@ -35,3 +35,22 @@ export const cancelFollow = target => {
     url: `/app/v1_0/user/followings/${target}`
   })
 }
+
+// 收藏文章
+export const addCollect = target => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/article/collections',
+    data: {
+      target
+    }
+  })
+}
+
+// 取消收藏
+export const cancelCollect = target => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/collections/${target}`
+  })
+}
