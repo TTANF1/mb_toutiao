@@ -36,20 +36,13 @@
           <div slot="label" class="publish-date">
             {{ article.pubdate | relativeTime }}
           </div>
-          <van-button
+          <!-- 关注组件 -->
+          <follow-user-btn
             class="follow-btn"
-            type="info"
-            color="#3296fa"
-            round
-            size="small"
-            icon="plus"
-            >关注</van-button
-          >
-          <!-- <van-button
-            class="follow-btn"
-            round
-            size="small"
-          >已关注</van-button> -->
+            v-model="article.is_followed"
+            :article-id="article.aut_id"
+          />
+          <!-- /关注组件 -->
         </van-cell>
         <!-- /用户信息 -->
 
@@ -98,6 +91,7 @@
 <script>
 import { getArticleInfoById } from '@/api/article'
 import { ImagePreview } from 'vant'
+import FollowUserBtn from '@/components/follow-user'
 
 export default {
   name: 'ArticleIndex',
@@ -106,6 +100,9 @@ export default {
       type: [Number, String, Object],
       required: true
     }
+  },
+  components: {
+    FollowUserBtn
   },
   data() {
     return {

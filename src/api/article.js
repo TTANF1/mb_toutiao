@@ -16,3 +16,22 @@ export const getArticleInfoById = articleId => {
     url: `/app/v1_0/articles/${articleId}`
   })
 }
+
+// 关注用户
+export const addFollow = target => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/user/followings',
+    data: {
+      target
+    }
+  })
+}
+
+// 取消关注
+export const cancelFollow = target => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/user/followings/${target}`
+  })
+}
