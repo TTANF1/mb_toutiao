@@ -150,6 +150,9 @@ export default {
     font-size: 32px;
     color: #333;
   }
+  /deep/.van-cell::after {
+    border-bottom: none;
+  }
 
   .edit-btn {
     width: 104px;
