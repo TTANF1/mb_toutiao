@@ -1,19 +1,19 @@
 <template>
   <van-icon
-    :color="value ? '#ffa500' : '#777'"
-    :name="value ? 'star' : 'star-o'"
+    :color="value === 1 ? '#ffa500' : '#777'"
+    :name="value === 1 ? 'good-job' : 'good-job-o'"
     @click="onCollect"
   />
 </template>
 
 <script>
-import { addCollect, cancelCollect } from '@/api/article'
+import { likeArticle, cancelLike } from '@/api/article'
 
 export default {
-  name: 'CollectArticle',
+  name: 'LikeArticle',
   props: {
     value: {
-      type: Boolean,
+      type: Number,
       required: true
     },
     articleId: {
@@ -32,16 +32,18 @@ export default {
         forbidClick: true
       })
       try {
-        if (this.value) {
-          // 取消收藏
-          await addCollect(this.articleId)
+        let status = -1
+        if (this.value === 1) {
+          // 取消点赞
+          await cancelLike(this.articleId)
         } else {
-          // 收藏
-          await cancelCollect(this.articleId)
+          // 点赞
+          await likeArticle(this.articleId)
+          status = 1
         }
-        this.$emit('input', !this.value)
+        this.$emit('input', status)
         // 这里刚将修改父组件值的事件触发，但还没有触发改变值 所以 value 还是旧的值
-        this.$toast.success(!this.value ? '收藏成功' : '取消收藏')
+        this.$toast.success(this.value !== 1 ? '点赞成功' : '取消点赞')
       } catch (err) {
         this.$toast('操作失败，请稍后再试')
       }

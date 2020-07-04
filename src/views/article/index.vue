@@ -62,11 +62,18 @@
           <van-icon name="comment-o" info="123" color="#777" />
           <!-- 收藏 -->
           <collect-article
+            class="cursor"
             v-model="article.is_collected"
             :article-id="article.art_id"
           />
           <!-- /收藏 -->
-          <van-icon color="#777" name="good-job-o" />
+          <!-- 点赞 -->
+          <like-article
+            class="cursor"
+            v-model="article.attitude"
+            :article-id="article.art_id"
+          />
+          <!-- /点赞 -->
           <van-icon name="share" color="#777777"></van-icon>
         </div>
         <!-- /底部区域 -->
@@ -98,6 +105,7 @@ import { getArticleInfoById } from '@/api/article'
 import { ImagePreview } from 'vant'
 import FollowUserBtn from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
+import LikeArticle from '@/components/like-article'
 
 export default {
   name: 'ArticleIndex',
@@ -109,7 +117,8 @@ export default {
   },
   components: {
     FollowUserBtn,
-    CollectArticle
+    CollectArticle,
+    LikeArticle
   },
   data() {
     return {
@@ -161,6 +170,9 @@ export default {
 @import './github-markdown.css';
 
 .article-container {
+  .cursor {
+    cursor: pointer;
+  }
   .main-wrap {
     position: fixed;
     left: 0;

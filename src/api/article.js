@@ -54,3 +54,22 @@ export const cancelCollect = target => {
     url: `/app/v1_0/article/collections/${target}`
   })
 }
+
+// 文章点赞
+export const likeArticle = target => {
+  return request({
+    method: 'POST',
+    url: '/app/v1_0/article/likings',
+    data: {
+      target
+    }
+  })
+}
+
+// 取消文章点赞
+export const cancelLike = target => {
+  return request({
+    method: 'DELETE',
+    url: `/app/v1_0/article/likings/${target}`
+  })
+}

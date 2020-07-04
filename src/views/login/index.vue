@@ -89,6 +89,7 @@ export default {
   methods: {
     async onSubmit() {
       this.$toast.loading({
+        duration: 0,
         message: '登录中...',
         // 禁用背景点击
         forbidClick: true
