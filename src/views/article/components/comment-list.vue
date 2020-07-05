@@ -27,6 +27,11 @@ export default {
     source: {
       type: [Number, String, Object],
       required: true
+    },
+    list: {
+      type: Array,
+      // 这里不允许直接设置 default: []
+      default: () => []
     }
   },
   components: {
@@ -34,7 +39,7 @@ export default {
   },
   data() {
     return {
-      list: [],
+      // list: [],
       loading: false,
       finished: false,
       offset: null,

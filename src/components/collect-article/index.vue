@@ -34,10 +34,10 @@ export default {
       try {
         if (this.value) {
           // 取消收藏
-          await addCollect(this.articleId)
+          await cancelCollect(this.articleId)
         } else {
           // 收藏
-          await cancelCollect(this.articleId)
+          await addCollect(this.articleId)
         }
         this.$emit('input', !this.value)
         // 这里刚将修改父组件值的事件触发，但还没有触发改变值 所以 value 还是旧的值

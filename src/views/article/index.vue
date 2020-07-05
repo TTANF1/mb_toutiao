@@ -57,15 +57,22 @@
         <!-- 评论列表 -->
         <comment-list
           :source="article.art_id"
+          :list="commentList"
           @onsuccess="totalCommentCount = $event.total_count"
         />
         <!-- /评论列表 -->
 
         <!-- 底部区域 -->
         <div class="article-bottom">
-          <van-button class="comment-btn" type="default" round size="small"
-            >写评论</van-button
+          <van-button
+            class="comment-btn"
+            type="default"
+            round
+            size="small"
+            @click="isPopupShow = true"
           >
+            写评论
+          </van-button>
           <van-icon name="comment-o" :info="totalCommentCount" color="#777" />
           <!-- 收藏 -->
           <collect-article
@@ -103,6 +110,12 @@
         >
       </div>
       <!-- /加载失败：其它未知错误（例如网络原因或服务端异常） -->
+
+      <!-- 评论弹出层 -->
+      <van-popup v-model="isPopupShow" position="bottom">
+        <comment-post :target="this.articleId" @post-success="onPostSuccess" />
+      </van-popup>
+      <!-- /评论弹出层 -->
     </div>
   </div>
 </template>
@@ -114,6 +127,7 @@ import FollowUserBtn from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
 import LikeArticle from '@/components/like-article'
 import CommentList from './components/comment-list.vue'
+import CommentPost from './components/comment-post.vue'
 
 export default {
   name: 'ArticleIndex',
@@ -127,14 +141,17 @@ export default {
     FollowUserBtn,
     CollectArticle,
     LikeArticle,
-    CommentList
+    CommentList,
+    CommentPost
   },
   data() {
     return {
       article: {},
       loading: true,
       errStatus: 0,
-      totalCommentCount: 0
+      totalCommentCount: 0,
+      isPopupShow: false,
+      commentList: []
     }
   },
   methods: {
@@ -165,6 +182,11 @@ export default {
           })
         }
       })
+    },
+    onPostSuccess(result) {
+      // console.log(result, 'result')
+      this.isPopupShow = false
+      this.commentList.unshift(result.data.new_obj)
     },
     goBack() {
       this.$router.go(-1)
