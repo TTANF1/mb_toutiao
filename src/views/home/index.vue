@@ -98,7 +98,6 @@ export default {
     },
     onUpdateActive(index, isShowEditChannel) {
       this.active = index
-      console.log(isShowEditChannel)
       this.showEditChannel = isShowEditChannel
     }
   }

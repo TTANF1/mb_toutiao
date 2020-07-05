@@ -54,12 +54,19 @@
         ></div>
         <van-divider>正文结束</van-divider>
 
+        <!-- 评论列表 -->
+        <comment-list
+          :source="article.art_id"
+          @onsuccess="totalCommentCount = $event.total_count"
+        />
+        <!-- /评论列表 -->
+
         <!-- 底部区域 -->
         <div class="article-bottom">
           <van-button class="comment-btn" type="default" round size="small"
             >写评论</van-button
           >
-          <van-icon name="comment-o" info="123" color="#777" />
+          <van-icon name="comment-o" :info="totalCommentCount" color="#777" />
           <!-- 收藏 -->
           <collect-article
             class="cursor"
@@ -106,6 +113,7 @@ import { ImagePreview } from 'vant'
 import FollowUserBtn from '@/components/follow-user'
 import CollectArticle from '@/components/collect-article'
 import LikeArticle from '@/components/like-article'
+import CommentList from './components/comment-list.vue'
 
 export default {
   name: 'ArticleIndex',
@@ -118,13 +126,15 @@ export default {
   components: {
     FollowUserBtn,
     CollectArticle,
-    LikeArticle
+    LikeArticle,
+    CommentList
   },
   data() {
     return {
       article: {},
       loading: true,
-      errStatus: 0
+      errStatus: 0,
+      totalCommentCount: 0
     }
   },
   methods: {
