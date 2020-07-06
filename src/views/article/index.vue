@@ -4,7 +4,7 @@
     <van-nav-bar
       class="page-nav-bar"
       left-arrow
-      title="黑马头条"
+      title="头条"
       :border="false"
       @click-left="goBack"
     ></van-nav-bar>
@@ -59,6 +59,7 @@
           :source="article.art_id"
           :list="commentList"
           @onsuccess="totalCommentCount = $event.total_count"
+          @reply-click="onReplyClick"
         />
         <!-- /评论列表 -->
 
@@ -117,6 +118,20 @@
       </van-popup>
       <!-- /评论弹出层 -->
     </div>
+
+    <!-- 评论回复弹出层 -->
+    <van-popup
+      v-model="isReplyShow"
+      position="bottom"
+      :style="{ height: '100%' }"
+    >
+      <comment-reply
+        v-if="isReplyShow"
+        :comment="currentComment"
+        @close="isReplyShow = false"
+      />
+    </van-popup>
+    <!-- /评论回复弹出层 -->
   </div>
 </template>
 
@@ -128,6 +143,7 @@ import CollectArticle from '@/components/collect-article'
 import LikeArticle from '@/components/like-article'
 import CommentList from './components/comment-list.vue'
 import CommentPost from './components/comment-post.vue'
+import CommentReply from './components/comment-reply.vue'
 
 export default {
   name: 'ArticleIndex',
@@ -137,12 +153,18 @@ export default {
       required: true
     }
   },
+  provide() {
+    return {
+      articleId: this.articleId
+    }
+  },
   components: {
     FollowUserBtn,
     CollectArticle,
     LikeArticle,
     CommentList,
-    CommentPost
+    CommentPost,
+    CommentReply
   },
   data() {
     return {
@@ -151,7 +173,9 @@ export default {
       errStatus: 0,
       totalCommentCount: 0,
       isPopupShow: false,
-      commentList: []
+      commentList: [],
+      isReplyShow: false,
+      currentComment: {}
     }
   },
   methods: {
@@ -187,6 +211,10 @@ export default {
       // console.log(result, 'result')
       this.isPopupShow = false
       this.commentList.unshift(result.data.new_obj)
+    },
+    onReplyClick(comment) {
+      this.currentComment = comment
+      this.isReplyShow = true
     },
     goBack() {
       this.$router.go(-1)

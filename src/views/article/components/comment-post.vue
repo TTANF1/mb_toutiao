@@ -21,6 +21,12 @@ import { addComment } from '@/api/article'
 
 export default {
   name: 'CommentPost',
+  inject: {
+    articleId: {
+      type: [Number, String, Object],
+      default: null
+    }
+  },
   props: {
     target: {
       type: [Number, String, Object],
@@ -42,9 +48,9 @@ export default {
       })
       try {
         const { data: res } = await addComment({
-          target: this.target,
+          target: this.target.toString(),
           content: this.message,
-          art_id: null
+          art_id: this.articleId ? this.articleId.toString() : null
         })
         // console.log(res, '发布评论信息')
         this.message = ''
