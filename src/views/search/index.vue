@@ -78,6 +78,9 @@ export default {
   padding-top: 108px;
   .van-search__action {
     color: #fff;
+    &:active {
+      background-color: transparent;
+    }
   }
   .search-bar {
     position: fixed;

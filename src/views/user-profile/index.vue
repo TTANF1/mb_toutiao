@@ -8,7 +8,14 @@
       @click-left="$router.back()"
     />
 
-    <van-cell title="头像" is-link>
+    <input
+      ref="avaterFileRef"
+      type="file"
+      hidden
+      @change="onAvaterFileChange"
+    />
+
+    <van-cell title="头像" is-link @click="$refs.avaterFileRef.click()">
       <van-image class="avater" fit="cover" :src="user.photo" round />
     </van-cell>
     <van-cell
@@ -63,6 +70,21 @@
       />
     </van-popup>
     <!-- /编辑生日 -->
+
+    <!-- 上传头像 -->
+    <van-popup
+      v-model="isUpdatePhotoShow"
+      position="bottom"
+      :style="{ height: '100%' }"
+    >
+      <update-photo
+        v-if="isUpdatePhotoShow"
+        :preview-img="previewImg"
+        @update-photo="user.photo = $event"
+        @close="isUpdatePhotoShow = false"
+      />
+    </van-popup>
+    <!-- /上传头像 -->
   </div>
 </template>
 
@@ -71,20 +93,24 @@ import { getUserProfile } from '@/api/user'
 import EditName from './components/edit-name'
 import UpdateGender from './components/update-gender'
 import UpdateBirthday from './components/update-birthday'
+import UpdatePhoto from './components/update-photo'
 
 export default {
   name: 'UserProfile',
   components: {
     EditName,
     UpdateGender,
-    UpdateBirthday
+    UpdateBirthday,
+    UpdatePhoto
   },
   data() {
     return {
       user: {},
       isEditNameShow: false,
       isUpdateGenderShow: false,
-      isUpdateBirthdayShow: false
+      isUpdateBirthdayShow: false,
+      isUpdatePhotoShow: false,
+      previewImg: null
     }
   },
   methods: {
@@ -95,6 +121,17 @@ export default {
       } catch (err) {
         this.$toast('请求失败，请稍后再试')
       }
+    },
+    onAvaterFileChange() {
+      // console.log('coming...')
+      // 获取文件对象
+      const file = this.$refs.avaterFileRef.files[0]
+      // 根据文件对象获取blob数据
+      this.previewImg = window.URL.createObjectURL(file)
+      this.isUpdatePhotoShow = true
+      // 如果两次上传相同的图片 则不会触发change事件 所以手动清空
+      // 加了v-if之后 好像重复的图片也能触发change事件
+      this.$refs.avaterFileRef.value = ''
     }
   },
   created() {
