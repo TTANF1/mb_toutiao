@@ -20,7 +20,11 @@ const routes = [
   {
     path: '/article/:articleId',
     component: () => import('@/views/article'),
-    props: true
+    props: true // 组件获取路由参数
+  },
+  {
+    path: '/user/profile',
+    component: () => import('@/views/user-profile')
   }
 ]
 

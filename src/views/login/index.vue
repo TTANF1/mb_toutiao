@@ -3,7 +3,7 @@
     <!-- 导航栏 -->
     <van-nav-bar class="page-nav-bar" title="登录" :border="false">
       <template #left>
-        <van-icon name="cross" color="#fff" @click="$router.go(-1)" />
+        <van-icon name="cross" @click="$router.go(-1)" />
       </template>
     </van-nav-bar>
 
